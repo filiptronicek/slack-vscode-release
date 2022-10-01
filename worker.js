@@ -41,17 +41,26 @@ async function handleRequest() {
     await releaseDb.put(id, tag_name);
     console.log(`Took note of ${tag_name} (${id})`);
     // Trigger GitHub Action
-    fetch(
+    const workflowTrigger = await fetch(
       "https://api.github.com/repos/filiptronicek/slack-vscode-release/dispatches",
       {
         method: "post",
-        body: JSON.stringify(githubApiResponse),
+        body: JSON.stringify(githubApiData),
         headers: {
           "Content-Type": "application/json",
           Authorization: `token ${githubApiToken}`,
+          "User-Agent": "VS Code Releases Checker",
         },
       }
     );
+    console.log(
+      `GitHub Action trigger: HTTP ${
+        workflowTrigger.status
+      } - ${await workflowTrigger.text()}`
+    );
+    if (!workflowTrigger.ok) {
+      await releaseDb.delete(id);
+    }
   } else {
     console.log(`Already seen ${tag_name} (${id})`);
   }
@@ -60,4 +69,3 @@ async function handleRequest() {
     status: 200,
   });
 }
-
