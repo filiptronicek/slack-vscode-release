@@ -13,6 +13,6 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_COLOR: "#FDD20A"
-          SLACK_TITLE: VS Code ${{ github.event.tag_name }} released
+          SLACK_TITLE: VS Code ${{ github.event.client_payload.tag_name }} released
           SLACK_MESSAGE: "A new release of VS Code has just been published."
 
