@@ -1,0 +1,18 @@
+name: Check for release
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: "#FDD20A"
+          SLACK_TITLE: VS Code ${{ github.event.tag_name }} released
+          SLACK_MESSAGE: "A new release of VS Code has just been published."
+
